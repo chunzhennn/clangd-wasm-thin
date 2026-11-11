@@ -1,5 +1,5 @@
 {
-  "name": "clangd-wasm-lean",
+  "name": "clangd-wasm-thin",
   "version": "0.1.0",
   "private": true,
   "type": "module",

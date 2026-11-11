@@ -1,4 +1,4 @@
-# clangd.wasm-lean
+# clangd.wasm-thin
 
 **clangd 21 in the browser — 48 MB instead of 121 MB, and 2x faster on the first analysis.**
 
@@ -14,7 +14,7 @@ module with **Asyncify** just to make `read(0, …)` block.
 This repo is a build of the same clangd 21 that fixes all three, without changing a single
 line of clang's behaviour:
 
-| | upstream `build.sh` | **clangd.wasm-lean (JSPI)** | delta |
+| | upstream `build.sh` | **clangd.wasm-thin (JSPI)** | delta |
 | --- | --- | --- | --- |
 | `clangd.wasm` | 121 MB | **48.0 MB** | **−60%** |
 | `clangd.wasm` (gzip −9) | 24.9 MiB | **11.4 MiB** | **−54%** |
