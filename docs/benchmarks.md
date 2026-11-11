@@ -47,13 +47,12 @@ The 121 MB → 69 MB step is sysroot pruning + 512 MiB initial memory + no asser
 
 ```
 121.0 MB  upstream build
- −52.0 MB  6 copies of the C++ headers → 1 (wasm32-wasi) + clang builtin headers
- − 4.6 MB  no -sASSERTIONS
- = 74.3 MB  (this repo, before the final Binaryen pass)
+ −46.7 MB  pruned sysroot (6 copies of the headers -> 1) + no -sASSERTIONS
+          = 74.3 MB (this repo, before the final Binaryen pass)
  − 5.2 MB  wasm-opt -Oz over the linked module (-7%)
- = 69.1 MB  Asyncify variant
+          = 69.1 MB (Asyncify variant)
  −21.1 MB  -sJSPI instead of -sASYNCIFY
- = 48.0 MB  JSPI variant
+          = 48.0 MB (JSPI variant)
 ```
 
 The data segments tell the same story: 77.7 MB embedded in the upstream build, **25.9 MB** here.

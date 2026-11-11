@@ -9,17 +9,19 @@ clangd resolves `#include <vector>` through the sysroot that is embedded in the 
 `--embed-file`. The released `wasi-sysroot-29.0` contains:
 
 ```
-include/c++/v1              12 MB   ← the real libc++ headers
-include/wasm32-wasi         17 MB   ← libc++ + libc, target-specific copy
-include/wasm32-wasip1       ...
-include/wasm32-wasip2       ...
-include/wasm32-wasi-threads ...
-include/wasm32-wasip1-threads ...
-include/wasm32-wasip2-threads ...
+include/wasm32-wasi           17 MB   ← libc++ + libc for the default target
+include/wasm32-wasi-threads   17 MB
+include/wasm32-wasip1         17 MB
+include/wasm32-wasip1-threads 17 MB
+include/wasm32-wasip2         17 MB
+include/c++                    8 KB   ← v1 inside each of the above
+--------------------------------------------------
+total                         85 MB
 ```
 
-Upstream embeds the whole `include/` directory: 85 MB of text, of which ~78 MB ends up as wasm
-data segments, all of it parsed by the module loader at startup. Only one copy is reachable,
+Every target directory carries the same libc++ headers again (they are the bulk of the 17 MB).
+Upstream embeds the whole `include/` tree: 85 MB of text, of which 77.7 MB lands in the wasm
+data segments, and all of it is parsed by the module loader at startup. Only one copy is reachable,
 because clangd's `.clangd` file adds
 
 ```
@@ -28,11 +30,10 @@ because clangd's `.clangd` file adds
 -isystem/usr/include/wasm32-wasi
 ```
 
-so this build stages `include/wasm32-wasi` (17 MB), adds clang's builtin headers
-(`lib/clang/21/include`, ~8 MB, needed for `stddef.h`/`stdarg.h`/intrinsics) and embeds 25 MB.
-`/usr/include/c++/v1` is *not* staged: the three `-isystem` paths above are resolved inside
-`/usr/include/wasm32-wasi/c++/v1`, and the symlinked layout of the original sysroot is preserved
-inside that directory, so `#include <vector>` still resolves.
+so this build stages only `include/wasm32-wasi` (17 MB), adds clang's builtin headers
+(`lib/clang/21/include`, ~8 MB: `stddef.h`, `stdarg.h`, intrinsics) and embeds 25 MB — data
+segments drop from 77.7 MB to 25.9 MB. Nothing becomes unreachable: the surviving tree is the
+same one the `-isystem` flags point at, and it is self-contained.
 
 ## 2. Memory
 
