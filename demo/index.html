@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>clangd.wasm-lean — minimal demo</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 18px; font: 14px/1.5 ui-sans-serif, system-ui, sans-serif;
+        background: #0f1115; color: #d7dbe0; display: grid; gap: 14px;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+      h1 { font-size: 15px; margin: 0 0 6px; font-weight: 600; }
+      h1 code { color: #7cc4ff; }
+      #left, #right { display: grid; gap: 10px; align-content: start; min-width: 0; }
+      textarea {
+        width: 100%; height: 340px; resize: vertical; padding: 10px; border-radius: 8px;
+        border: 1px solid #2a2f38; background: #12151b; color: #e6e9ee;
+        font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      button {
+        justify-self: start; padding: 7px 14px; border-radius: 7px; cursor: pointer;
+        border: 1px solid #2f6feb; background: #1b4dd8; color: #fff; font-weight: 600;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      #status { color: #9aa4b2; font-size: 13px; min-height: 20px; }
+      #status b { color: #7cc4ff; }
+      #diags { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+      #diags li { padding: 7px 9px; border-radius: 6px; background: #171b22; border-left: 3px solid #8a94a6; }
+      #diags li.error { border-color: #f2555a; }
+      #diags li.warning { border-color: #e0b341; }
+      #diags li.note { border-color: #4c9aff; }
+      #diags em { color: #8a94a6; font-style: normal; }
+      #log {
+        height: 240px; overflow: auto; padding: 9px; border-radius: 8px; background: #12151b;
+        border: 1px solid #2a2f38; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #8f9aa8; white-space: pre-wrap;
+      }
+      @media (max-width: 900px) { body { grid-template-columns: minmax(0, 1fr); } }
+    </style>
+  </head>
+  <body>
+    <div id="left">
+      <h1><code>clangd.wasm-lean</code> — minimal LSP demo</h1>
+      <textarea id="code" spellcheck="false">#include <iostream>
+#include <string>
+#include <vector>
+
+int main() {
+  std::vector<std::string> words{"clangd", "in", "wasm"};
+  int total = 0;
+  for (const auto& word : words) {
+    total += word.size();
+  }
+  std::cout << "total: " << total << std::endl;
+  return 0;
+}
+</textarea>
+      <button id="run">Analyze</button>
+      <div id="status">idle</div>
+    </div>
+    <div id="right">
+      <h1>diagnostics</h1>
+      <ul id="diags"><li><em>nothing yet — press Analyze</em></li></ul>
+      <h1>clangd log</h1>
+      <div id="log"></div>
+    </div>
+    <script type="module" src="./main.mjs"></script>
+  </body>
+</html>
