@@ -21,7 +21,8 @@ OUT_FILE=${OUT_FILE:-$OUT/clangd.opt.wasm}
 echo "== wasm-opt -Oz ($(basename "$IN"))"
 time "$WASM_OPT" "$IN" -Oz --all-features -o "$OUT_FILE"
 
-sz() { ls -l "$1" | awk '{printf "%.1f MB", $5/1048576}'; }
-gz() { gzip -9 -c "$1" | wc -c | awk '{printf "%.1f MB", $1/1048576}'; }
+# decimal MB, matching the numbers in the README
+sz() { ls -l "$1" | awk '{printf "%.1f MB (%.1f MiB)", $5/1000000, $5/1048576}'; }
+gz() { gzip -9 -c "$1" | wc -c | awk '{printf "%.1f MB (%.1f MiB)", $1/1000000, $1/1048576}'; }
 echo "   raw : $(sz "$IN") -> $(sz "$OUT_FILE")"
 echo "   gzip: $(gz "$IN") -> $(gz "$OUT_FILE")"

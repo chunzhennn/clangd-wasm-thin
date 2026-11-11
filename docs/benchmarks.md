@@ -27,7 +27,7 @@ Two knobs make the variants comparable:
 | | upstream `build.sh` | this repo, Asyncify | this repo, JSPI |
 | --- | --- | --- | --- |
 | `clangd.wasm` | 121 MB | 69.1 MB | **48.0 MB** |
-| gzip −9 | 24.9 MB | 16.4 MB | **11.4 MB** |
+| gzip −9 | 24.9 MiB | 16.4 MiB | **11.4 MiB** |
 | `INITIAL_MEMORY` | 2 GiB | 512 MiB | 512 MiB |
 | Asyncify instrumentation | yes | yes | **no** |
 | click → clangd ready (wasm cached) | 917 ms | 467 ms | **420 ms** |

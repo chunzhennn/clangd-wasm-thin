@@ -17,7 +17,7 @@ line of clang's behaviour:
 | | upstream `build.sh` | **clangd.wasm-lean (JSPI)** | delta |
 | --- | --- | --- | --- |
 | `clangd.wasm` | 121 MB | **48.0 MB** | **−60%** |
-| `clangd.wasm` (gzip −9) | 24.9 MB | **11.4 MB** | **−54%** |
+| `clangd.wasm` (gzip −9) | 24.9 MiB | **11.4 MiB** | **−54%** |
 | initial memory | 2 GiB | **512 MiB** | −75% |
 | first analysis of a 5-header file | 5.2 s | **2.6 s** | **−50%** |
 | CPU spent on it | 49.7 s | **18.7 s** | −62% |
