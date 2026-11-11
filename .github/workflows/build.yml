@@ -1,0 +1,57 @@
+name: build
+
+on:
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: "jspi or asyncify"
+        default: jspi
+  push:
+    tags: ['v*']
+
+jobs:
+  wasm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      # The toolchain downloads (emsdk, wasi-sysroot, LLVM, Binaryen) and the LLVM
+      # build tree dominate the runtime; cache them between runs.
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build/emsdk
+            .build/wasi-sysroot-29.0
+            .build/llvm-project/build-native
+            .build/binaryen-version_123
+          key: toolchain-${{ hashFiles('scripts/config.sh') }}
+
+      - name: Cache ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          max-size: 4G
+
+      - name: Install host tools
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build python3 ccache
+
+      - name: Build
+        env:
+          VARIANT: ${{ inputs.variant || 'jspi' }}
+          JOBS: 4
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: ./scripts/build.sh
+
+      - name: Report size
+        run: |
+          ls -l public/wasm/*/clangd.wasm
+          gzip -9 -c public/wasm/*/clangd.wasm | wc -c
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clangd-wasm-${{ inputs.variant || 'jspi' }}
+          path: |
+            public/wasm/**/clangd.js
+            public/wasm/**/clangd.wasm
+          if-no-files-found: error

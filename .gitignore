@@ -1,0 +1,9 @@
+# toolchain + build tree (~6 GB)
+/.build/
+
+# build output (48 MB wasm — publish it as a release artifact instead)
+/public/wasm/
+
+# demo server
+*.log
+node_modules/

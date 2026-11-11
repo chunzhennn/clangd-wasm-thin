@@ -1,0 +1,13 @@
+{
+  "name": "clangd-wasm-lean",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "clangd 21 for the browser, 48 MB instead of 121 MB",
+  "license": "MIT",
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "build:asyncify": "VARIANT=asyncify ./scripts/build.sh",
+    "demo": "node demo/serve.mjs"
+  }
+}
